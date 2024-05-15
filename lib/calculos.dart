@@ -154,8 +154,7 @@ class _MatrizComparacionFormState extends State<MatrizComparacionForm> {
             Table(
                 border: TableBorder.all(
                   color: Colors.blue,
-                ), // Allows to add a border decoration around your table
-
+                ),
                 children: [
                   TableRow(children: [
                     Text(''),

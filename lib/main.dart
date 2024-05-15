@@ -259,7 +259,6 @@ class _RegisterFormState extends State<RegisterForm> {
           ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  // Implementar la lógica de registro de usuario aquí
                   print('Usuario registrado exitosamente');
                 }
               },
@@ -334,7 +333,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  // Implementar la lógica de recuperación de contraseña aquí
                   print('Correo de recuperación enviado a $_email');
                 }
               },
@@ -514,7 +512,7 @@ class Configuracion extends StatelessWidget {
       children: <Widget>[
         OutlinedButton(
           onPressed: () {
-            // Navegar a la página de registro
+            // Navegar al login
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
