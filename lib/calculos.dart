@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/resultados.dart';
+import 'package:http/http.dart' as http;
 
 class CalculosForm extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _CalculosFormState extends State<CalculosForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -61,7 +63,7 @@ class _CalculosFormState extends State<CalculosForm> {
                   backgroundColor: Colors.blue, foregroundColor: Colors.white)),
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -77,6 +79,7 @@ class _AlternativasFormState extends State<AlternativasForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -116,6 +119,7 @@ class _AlternativasFormState extends State<AlternativasForm> {
                   }
                   return null;
                 }),
+          SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
                 print('Calculo realizado exitosamente');
@@ -130,7 +134,7 @@ class _AlternativasFormState extends State<AlternativasForm> {
                   backgroundColor: Colors.blue, foregroundColor: Colors.white)),
         ],
       ),
-    );
+    ));
   }
 }
 

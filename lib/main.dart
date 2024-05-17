@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'calculos.dart';
-
 import 'historial.dart';
 import 'resultados.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(LoginApp());
@@ -53,7 +53,53 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  //variables para tomar lo que hay en los textfield
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _message = '';
+// peticion post para el login
+  Future<void> _login() async {
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: jsonEncode(<String, String>{
+        'nombre': _nombreController.text,
+        'password': _passwordController.text,
+      }),
+    );
 
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      print('si jala');
+      _message = responseData['mensaje'];
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+      showSuccessSnackbar(context, _message);
+    } else {
+      print('no jala');
+      print(_message);
+      _message = responseData['mensaje'];
+    }
+  }
+
+//mensaje flotante
+  void showSuccessSnackbar(BuildContext context, String _message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_message),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.blueGrey,
+      ),
+    );
+  }
+
+//widget del login
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -62,6 +108,7 @@ class _LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextFormField(
+            controller: _nombreController,
             decoration: InputDecoration(
                 labelText: 'Nombre',
                 enabledBorder: OutlineInputBorder(
@@ -83,6 +130,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: 20),
           TextFormField(
+            controller: _passwordController,
             decoration: InputDecoration(
                 labelText: 'Contraseña',
                 enabledBorder: OutlineInputBorder(
@@ -106,30 +154,12 @@ class _LoginFormState extends State<LoginForm> {
           ElevatedButton(
               child: Text('Iniciar Sesión'),
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  print('Inicio de sesión exitoso');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                }
+                _login();
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, foregroundColor: Colors.white)),
           SizedBox(height: 20),
-          // ElevatedButton(
-          //     child: Text('Continuar sin registrar'),
-          //     onPressed: () {
-          //       if (_formKey.currentState!.validate()) {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(builder: (context) => HomePage()),
-          //         );
-          //       }
-          //     },
-          //     style: ElevatedButton.styleFrom(
-          //         backgroundColor: Colors.blue, foregroundColor: Colors.white)),
-          SizedBox(height: 20),
+          Text(_message),
           TextButton(
             onPressed: () {
               // Navegar a la página de registro
@@ -139,17 +169,6 @@ class _LoginFormState extends State<LoginForm> {
               );
             },
             child: Text('¿No tienes una cuenta? Regístrate aquí'),
-            style: TextButton.styleFrom(foregroundColor: Colors.black),
-          ),
-          TextButton(
-            onPressed: () {
-              // Navegar a la página de recuperación de contraseña
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-              );
-            },
-            child: Text('¿Olvidaste tu contraseña?'),
             style: TextButton.styleFrom(foregroundColor: Colors.black),
           ),
         ],
@@ -187,7 +206,55 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  // variables para tomar el valor de los textfield
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _correoController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
+  String _message = '';
+// peticion post para el login
+  Future<void> _registrarUsuario() async {
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/registro'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: jsonEncode(<String, String>{
+        'nombre': _nombreController.text,
+        'password': _passwordController.text,
+        'email': _correoController.text
+      }),
+    );
+
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      print('si jala');
+      _message = responseData['mensaje'];
+      showSuccessSnackbar(context, _message);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      print('no jala');
+      print(_message);
+      _message = responseData['mensaje'];
+    }
+  }
+
+  //mensaje flotante
+  void showSuccessSnackbar(BuildContext context, String _message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_message),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.blueGrey,
+      ),
+    );
+  }
+
+//wiidget del formulario de registro
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -196,6 +263,7 @@ class _RegisterFormState extends State<RegisterForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextFormField(
+            controller: _nombreController,
             decoration: InputDecoration(
                 labelText: 'Nombre',
                 enabledBorder: OutlineInputBorder(
@@ -216,6 +284,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           SizedBox(height: 20),
           TextFormField(
+            controller: _correoController,
             decoration: InputDecoration(
                 labelText: 'Correo Electrónico',
                 enabledBorder: OutlineInputBorder(
@@ -236,6 +305,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           SizedBox(height: 20),
           TextFormField(
+            controller: _passwordController,
             decoration: InputDecoration(
               labelText: 'Contraseña',
               enabledBorder: OutlineInputBorder(
@@ -258,9 +328,7 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  print('Usuario registrado exitosamente');
-                }
+                _registrarUsuario();
               },
               child: Text('Registrarse'),
               style: TextButton.styleFrom(
@@ -273,7 +341,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
 //PANTALLA CAMBIAR CONTRA
 //////////////////
-class ForgotPasswordPage extends StatelessWidget {
+class ActualizarContraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,19 +354,19 @@ class ForgotPasswordPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20.0),
-          child: ForgotPasswordForm(),
+          child: ActualizarContraForm(),
         ),
       ),
     );
   }
 }
 
-class ForgotPasswordForm extends StatefulWidget {
+class ActualizarContraForm extends StatefulWidget {
   @override
-  _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
+  _ActualizarContraFormState createState() => _ActualizarContraFormState();
 }
 
-class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
+class _ActualizarContraFormState extends State<ActualizarContraForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _email = '';
@@ -312,14 +380,36 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         children: <Widget>[
           TextFormField(
             decoration: InputDecoration(
-                labelText: 'Correo Electrónico',
+                labelText: 'Contraseña Actual',
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue),
                 )),
             cursorColor: Colors.blue,
             validator: (value) {
               if (value == "") {
-                return 'Por favor ingresa tu correo electrónico';
+                return 'Por favor ingresa tu contraseña actual';
+              }
+              return null;
+            },
+            onChanged: (value) {
+              setState(() {
+                _email = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+                labelText: 'Contraseña Nueva',
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                )),
+            cursorColor: Colors.blue,
+            validator: (value) {
+              if (value == "") {
+                return 'Por favor ingresa tu nueva contraseña';
               }
               return null;
             },
@@ -331,12 +421,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  print('Correo de recuperación enviado a $_email');
-                }
-              },
-              child: Text('Recuperar Contraseña'),
+              onPressed: () {},
+              child: Text('Actualizar Contraseña'),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, foregroundColor: Colors.white)),
         ],
@@ -347,6 +433,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
 //PANTALLA PRINCIPAL
 //////////////////////////////////
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -414,7 +501,7 @@ class HomeForm extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(20.0),
-        child: Text('Bienvenido a la pantalla principal :)'),
+        child: Text("Bienvenido"),
       ),
     );
   }
@@ -513,7 +600,7 @@ class Configuracion extends StatelessWidget {
         OutlinedButton(
           onPressed: () {
             // Navegar al login
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
@@ -526,9 +613,9 @@ class Configuracion extends StatelessWidget {
         OutlinedButton(
           onPressed: () {
             // Navegar a la página de registro
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+              MaterialPageRoute(builder: (context) => ActualizarContraPage()),
             );
           },
           child: const Text(

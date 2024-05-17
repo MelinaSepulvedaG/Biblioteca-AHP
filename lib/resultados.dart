@@ -1,6 +1,7 @@
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ResultadoForm extends StatefulWidget {
   @override
