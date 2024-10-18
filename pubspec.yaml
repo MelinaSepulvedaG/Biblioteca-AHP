@@ -11,7 +11,11 @@ dependencies:
     sdk: flutter
   flutter_login: ^5.0.0
   http: 
-  syncfusion_flutter_charts: ^25.2.4
+  syncfusion_flutter_charts: ^27.1.52
+  shared_preferences: ^2.0.13  
+ # flutter_localizations:
+   # sdk: flutter
+  #intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
