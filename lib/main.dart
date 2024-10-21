@@ -71,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000/login'),
+        Uri.parse('http://172.20.10.9:5000/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*'
@@ -128,10 +128,10 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: _nombreController,
             decoration: InputDecoration(
-                labelText: 'Nombre',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueGrey),
-                ),
+              labelText: 'Nombre',
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blueGrey),
+              ),
             ),
             cursorColor: Colors.blueGrey,
             validator: (value) {
@@ -149,7 +149,6 @@ class _LoginFormState extends State<LoginForm> {
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blueGrey),
               ),
-             
               suffixIcon: IconButton(
                 icon: Icon(
                   _verContra ? Icons.visibility : Icons.visibility_off,
@@ -254,7 +253,7 @@ class _RegisterFormState extends State<RegisterForm> {
     }
 
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/registro'),
+      Uri.parse('http://172.20.10.9:5000/registro'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*'
@@ -530,7 +529,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Biblioteca MADM'),
+        title: const Text('Algoritmo AHP'),
         automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: Colors.blue,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
 import 'resultados.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -54,7 +53,7 @@ class _ComparacionAlternativasFormState
   @override
   void initState() {
     super.initState();
-    // Inicializar los controladores de la matriz de alternativas
+
     _matrixControllers = List.generate(
       widget.criterios.length,
       (c) => List.generate(
@@ -65,32 +64,29 @@ class _ComparacionAlternativasFormState
     );
   }
 
-  // Método para validar que todos los campos tengan valores
   bool _validateMatrixFields() {
     for (int c = 0; c < widget.criterios.length; c++) {
       for (int i = 0; i < widget.alternativas.length; i++) {
         for (int j = 0; j < widget.alternativas.length; j++) {
           if (_matrixControllers[c][i][j].text.isEmpty) {
-            return false; // Retorna false si algún campo está vacío
+            return false;
           }
         }
       }
     }
-    return true; // Retorna true si todos los campos tienen valores
+    return true;
   }
 
   // Petición para el cálculo
   Future<void> _calcular() async {
-    // Validar que todos los campos tengan valores
     if (!_validateMatrixFields()) {
-      // Mostrar un mensaje de error si hay campos vacíos
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Por favor, complete todos los campos.'),
           backgroundColor: Colors.red,
         ),
       );
-      return; // Salir si hay campos vacíos
+      return;
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -101,23 +97,19 @@ class _ComparacionAlternativasFormState
       return;
     }
 
-    // Aquí construimos el JSON según el formato requerido
     final Map<String, dynamic> requestBody = {
-      'idUsuario':
-          int.parse(idUsuario), // Asegúrate de que idUsuario sea un número
+      'idUsuario': int.parse(idUsuario),
       'criterios': {
         'nombres': widget.criterios.map((c) => c.toString()).toList(),
         'matriz': getMatrizDeComparacionCriterios(),
         'alternativas': getMatricesDeComparacion()
       },
       'alternativas': {
-        'nombres': widget.alternativas
-            .map((a) => a.toString())
-            .toList(), // Convertir a String
+        'nombres': widget.alternativas.map((a) => a.toString()).toList(),
       },
     };
 
-    print(requestBody); // Para ver el JSON que se enviará
+    print(requestBody);
     final response = await http.post(
       Uri.parse('http://127.0.0.1:5000/ahp'),
       headers: <String, String>{
@@ -132,22 +124,18 @@ class _ComparacionAlternativasFormState
       try {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-        // Extraer alternativas y puntajes
         List<String> alternativas =
             responseData['puntajes_alternativas'].keys.toList();
 
-        // Convertir los puntajes a una lista de double
         List<double> puntajes = [];
         for (var value in responseData['puntajes_alternativas'].values) {
-          // Asegúrate de que value sea convertible a double
           if (value is num) {
             puntajes.add(value.toDouble());
           } else {
-            puntajes.add(0.0); // Manejar el caso donde la conversión falle
+            puntajes.add(0.0);
           }
         }
 
-        // Navegar a la página de resultados
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -168,20 +156,18 @@ class _ComparacionAlternativasFormState
     for (int i = 0; i < widget.criterios.length; i++) {
       for (int j = 0; j < widget.criterios.length; j++) {
         if (i != j) {
-          // Asegúrate de que el índice i y j sean válidos para _matrixControllers
           if (i < _matrixControllers.length &&
               j < _matrixControllers[i].length) {
             double valorComparacion =
                 double.tryParse(_matrixControllers[i][j].toString()) ?? 1.0;
 
             if (valorComparacion <= 0) {
-              // Manejar el error si es necesario
               continue;
             }
 
             matrizCriterios[i][j] = valorComparacion;
             matrizCriterios[j][i] =
-                valorComparacion == 0 ? 1.0 : 1 / valorComparacion; // Simetría
+                valorComparacion == 0 ? 1.0 : 1 / valorComparacion;
           }
         }
       }
@@ -190,29 +176,23 @@ class _ComparacionAlternativasFormState
     return matrizCriterios;
   }
 
-  // sacar los valores de las matrices por criterio
   List<List<List<double>>> getMatricesDeComparacion() {
     List<List<List<double>>> matrices = [];
 
-    // Iterar sobre los criterios para generar la matriz de cada uno
+    // generar la matriz de cada criteior
     for (int c = 0; c < widget.criterios.length; c++) {
       List<List<double>> matriz = [];
 
-      // Para cada criterio, iterar sobre las alternativas (filas)
       for (int i = 0; i < widget.alternativas.length; i++) {
         List<double> row = [];
 
-        // Iterar sobre las columnas (alternativas) de cada fila
         for (int j = 0; j < widget.alternativas.length; j++) {
-          // Parsear el valor del controlador de texto a double
           row.add(double.tryParse(_matrixControllers[c][i][j].text) ?? 1.0);
         }
 
-        // Agregar la fila a la matriz del criterio actual
         matriz.add(row);
       }
 
-      // Agregar la matriz completa del criterio actual a la lista de matrices
       matrices.add(matriz);
     }
 
@@ -221,7 +201,6 @@ class _ComparacionAlternativasFormState
 
   @override
   void dispose() {
-    // Limpiar los controladores
     for (var criterio in _matrixControllers) {
       for (var row in criterio) {
         for (var controller in row) {
@@ -284,10 +263,9 @@ class _ComparacionAlternativasFormState
               context: context,
               builder: (BuildContext context) => Dialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(16.0), // Bordes redondeados
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
-                backgroundColor: Colors.white, // Color de fondo del diálogo
+                backgroundColor: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -320,13 +298,10 @@ class _ComparacionAlternativasFormState
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          backgroundColor:
-                              Colors.blue, // Color de fondo del botón
-                          foregroundColor:
-                              Colors.white, // Color del texto del botón
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Bordes redondeados
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                         child: const Text(

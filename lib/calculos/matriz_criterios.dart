@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'alternativas.dart'; // Importar la pantalla de AlternativasForm
+import 'alternativas.dart';
 
 class ComparacionCriterios extends StatelessWidget {
   final List<String> criterios;
@@ -38,13 +38,12 @@ class CriteriosTable extends StatefulWidget {
 }
 
 class _CriteriosTableState extends State<CriteriosTable> {
-  // Controladores para la matriz de comparación de criterios
   List<List<TextEditingController>> _matrixControllers = [];
 
   @override
   void initState() {
     super.initState();
-    // Inicializamos los controladores de la matriz según la cantidad de criterios
+
     if (widget.size > 0) {
       _matrixControllers = List.generate(
         widget.size,
@@ -55,7 +54,6 @@ class _CriteriosTableState extends State<CriteriosTable> {
 
   @override
   void dispose() {
-    // Limpiar los controladores
     for (var row in _matrixControllers) {
       for (var controller in row) {
         controller.dispose();
@@ -65,9 +63,7 @@ class _CriteriosTableState extends State<CriteriosTable> {
   }
 
   void _navigateToAlternativasForm() {
-    // Validar que todos los campos tengan valores
     if (_validateMatrixFields()) {
-      // Obtenemos la matriz de criterios ingresada
       List<List<double>> matrizCriterios = getMatrizDeComparacionCriterios();
 
       Navigator.push(
@@ -75,13 +71,11 @@ class _CriteriosTableState extends State<CriteriosTable> {
         MaterialPageRoute(
           builder: (context) => AlternativasForm(
             criterios: widget.criterios,
-            matrizCriterios:
-                matrizCriterios, // Pasamos la matriz de criterios aquí
+            matrizCriterios: matrizCriterios,
           ),
         ),
       );
     } else {
-      // Mostrar un mensaje de error si hay campos vacíos
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Por favor, complete todos los campos.'),
@@ -91,19 +85,19 @@ class _CriteriosTableState extends State<CriteriosTable> {
     }
   }
 
-  // Método para validar que todos los campos tengan valores
+  //  validar que todos los campos tengan valores
   bool _validateMatrixFields() {
     for (int i = 0; i < widget.size; i++) {
       for (int j = 0; j < widget.size; j++) {
         if (_matrixControllers[i][j].text.isEmpty) {
-          return false; // Retorna false si algún campo está vacío
+          return false;
         }
       }
     }
-    return true; // Retorna true si todos los campos tienen valores
+    return true;
   }
 
-  // Método para obtener la matriz de comparación de criterios
+  // obtener la matriz de comparación
   List<List<double>> getMatrizDeComparacionCriterios() {
     List<List<double>> matriz = [];
     for (int i = 0; i < widget.size; i++) {
@@ -140,7 +134,7 @@ class _CriteriosTableState extends State<CriteriosTable> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  SizedBox(width: 10), // Espacio entre campos de texto
+                  SizedBox(width: 10),
                 ],
               ],
             ),
@@ -159,10 +153,9 @@ class _CriteriosTableState extends State<CriteriosTable> {
               context: context,
               builder: (BuildContext context) => Dialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(16.0), // Bordes redondeados
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
-                backgroundColor: Colors.white, // Color de fondo del diálogo
+                backgroundColor: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -195,13 +188,10 @@ class _CriteriosTableState extends State<CriteriosTable> {
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          backgroundColor:
-                              Colors.blue, // Color de fondo del botón
-                          foregroundColor:
-                              Colors.white, // Color del texto del botón
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Bordes redondeados
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                         child: const Text(

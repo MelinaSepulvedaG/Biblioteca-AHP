@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
+import 'package:AHP/main.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'comparacion_alt.dart';
 
 class ResultadoForm extends StatefulWidget {
   final List<String> alternativas;
@@ -18,10 +17,9 @@ class _ResultadoFormState extends State<ResultadoForm> {
   @override
   void initState() {
     super.initState();
-    // Ordenar los datos de mayor a menor basados en las ponderaciones
+    // oordenar los datos de mayor a menor
     widget.puntajes.sort((a, b) => a.compareTo(b));
 
-    // Inicializar 'data' utilizando las listas pasadas por el widget
     data = List<_ResultadosFinales>.generate(
         widget.alternativas.length,
         (index) => _ResultadosFinales(
@@ -52,7 +50,6 @@ class _ResultadoFormState extends State<ResultadoForm> {
                 yValueMapper: (_ResultadosFinales datos, _) =>
                     datos.ponderacion,
                 name: 'Prioridades',
-                // Enable data label
                 dataLabelSettings: DataLabelSettings(isVisible: true),
               ),
             ],

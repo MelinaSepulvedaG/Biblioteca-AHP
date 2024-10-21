@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'comparacion_alt.dart'; // Importar la pantalla de ComparacionAlternativas
+import 'comparacion_alt.dart';
 
 class AlternativasForm extends StatefulWidget {
   final List<String> criterios;
 
-  final List<List<double>> matrizCriterios; // Recibimos la matriz de criterios
+  final List<List<double>> matrizCriterios;
 
   AlternativasForm({
     required this.criterios,
@@ -39,8 +39,7 @@ class _AlternativasPageState extends State<AlternativasForm> {
           builder: (context) => ComparacionAlternativas(
             criterios: widget.criterios,
             alternativas: alternativas,
-            matrizCriterios:
-                widget.matrizCriterios, // Pasar la matriz de criterios
+            matrizCriterios: widget.matrizCriterios,
           ),
         ),
       );
@@ -58,7 +57,7 @@ class _AlternativasPageState extends State<AlternativasForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Biblioteca MADM'),
+        title: Text('Alternativas'),
         centerTitle: true,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,

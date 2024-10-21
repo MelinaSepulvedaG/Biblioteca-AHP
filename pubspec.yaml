@@ -1,5 +1,5 @@
-name: flutter_application_1
-description: "A new Flutter project."
+name: "AHP"
+description: "Aplicacion de apoyo de toma de decisiones implementando el Algoritmo AHP"
 publish_to: 'none'
 version: 0.1.0
 

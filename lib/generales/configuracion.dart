@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_application_1/main.dart';
+import 'package:AHP/main.dart';
 
 class Configuracion extends StatelessWidget {
   @override
@@ -11,12 +11,10 @@ class Configuracion extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Botón para cambiar la contraseña
             ElevatedButton.icon(
               icon: Icon(Icons.edit_rounded),
               label: const Text('Cambiar Contraseña'),
               onPressed: () {
-                // Navegar a la página de actualización de contraseña
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -31,15 +29,13 @@ class Configuracion extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            // Botón para cerrar sesión
             ElevatedButton.icon(
               icon: Icon(Icons.logout_sharp),
               label: Text('Cerrar Sesión'),
               onPressed: () async {
-                // Borrar el ID de usuario del almacenamiento local
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.remove('idUsuario');
-                // Navegar al login
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),

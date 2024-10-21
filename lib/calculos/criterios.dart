@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'matriz_criterios.dart'; // Asegúrate de que esta sea la pantalla de comparación de criterios
+import 'matriz_criterios.dart';
 
 class CriteriosPage extends StatefulWidget {
   @override
@@ -9,14 +9,12 @@ class CriteriosPage extends StatefulWidget {
 class _CriteriosPageState extends State<CriteriosPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // Lista de controladores para los criterios
   final List<TextEditingController> _controllers = [];
 
   int num_campos = 0;
 
   @override
   void dispose() {
-    // Limpia los controladores cuando ya no se usan
     for (var controller in _controllers) {
       controller.dispose();
     }
@@ -45,7 +43,6 @@ class _CriteriosPageState extends State<CriteriosPage> {
                   setState(() {
                     num_campos = int.tryParse(value) ?? 0;
 
-                    // Ajustar el número de controladores según la cantidad de campos
                     if (_controllers.length < num_campos) {
                       for (int i = _controllers.length; i < num_campos; i++) {
                         _controllers.add(TextEditingController());
@@ -89,13 +86,12 @@ class _CriteriosPageState extends State<CriteriosPage> {
                         .map((controller) => controller.text)
                         .toList();
 
-                    // Navegar a la pantalla de comparación de criterios con los nombres
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ComparacionCriterios(
                           criterios: criterios,
-                          size: num_campos, // cantidad de criterios
+                          size: num_campos,
                         ),
                       ),
                     );
